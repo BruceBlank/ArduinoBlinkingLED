@@ -1,52 +1,56 @@
-#include <stdio.h>
-#include <avr/io.h>
-#include <util/delay.h>
+// Do not remove the include below
+#include "Arduino.h"
 
+int led = 13;
+unsigned long timeScale=0;
 
-#define LED PORTB5 // LED is on Pin 13 or Pin 5 of Port B
-#define timeScale 250
-
-void initIO(void)
+void initialization(void)
 {
-DDRB |= (1<<LED);
+	init();
+	pinMode(led, OUTPUT);
 }
 
 void dit(void)
 {
 // the short signal (dit) and the gap
-	PORTB |= (1<<LED); // set
-	_delay_ms(timeScale * 1);
-	PORTB &= ~(1<<LED); // clear
-	_delay_ms(timeScale * 1);
+	digitalWrite(led, HIGH);
+	delay(timeScale * 1);
+	digitalWrite(led, LOW);
+	delay(timeScale * 1);
 }
 
 void dah(void)
 {
 // the long signal (dah) and the gap
-	PORTB |= (1<<LED); // set
-	_delay_ms(timeScale * 3);
-	PORTB &= ~(1<<LED); // clear
-	_delay_ms(timeScale * 1);
+	digitalWrite(led, HIGH);
+	delay(timeScale * 3);
+	digitalWrite(led, LOW);
+	delay(timeScale * 1);
 }
 
 void letterGap(void)
 {
 // (additional) silence between two letters
-	_delay_ms(timeScale * 2);
+	delay(timeScale * 2);
 }
 
 void wordGap(void)
 {
-// (additional) silence between two words
-	_delay_ms(timeScale * 4);
+	// (additional) silence between two words	  while(1);
+	delay(timeScale * 4);
 }
 
 int main(void)
 {
-  initIO();
+  initialization();
 
   while (1)
   {
+	  // read and set timeScale from A2: [0,1023] -> [100,500]
+	  int sensorValue = analogRead(A2);
+	  timeScale = (unsigned long)(sensorValue * (400.0 / 1023) + 100);
+	  //Serial.println(timeScale);
+
 	  // send SOS
 	  dit(); dit(); dit(); letterGap();
 	  dah(); dah(); dah(); letterGap();
