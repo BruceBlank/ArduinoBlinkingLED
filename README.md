@@ -1,5 +1,5 @@
-Arduino-Program for a blinking LED:
-===================================
+Blinking LED with bells and whistles:
+=====================================
 
-LED (DigitalInput PIN 13) blinks. Potentiometer (AnalogInput PIN A2) defines speed.
+An Arduino-Program that lets blink an LED on DigitalInput PIN 13). A Potentiometer on AnalogInput PIN A2 defines the speed.
 
