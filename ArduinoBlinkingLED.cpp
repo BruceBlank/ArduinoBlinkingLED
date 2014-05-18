@@ -81,10 +81,20 @@ void CBlinkingLED::doit()
 	dit(); dit(); dit(); letterGap(); wordGap();
 }
 
+void interrupt_pin2()
+{
+	//FORTESTING:
+	digitalWrite(13, HIGH);
+}
+
 int main(void)
 {
 	// general initialization
 	init();
+
+	//FORTESTING: register button-interrupt
+	pinMode(2, INPUT);
+	attachInterrupt(0, interrupt_pin2, LOW);
 
 	CBlinkingLED blinkLED(13, A0, 8);
 
