@@ -81,6 +81,54 @@ void CBlinkingLED::doit()
 	dit(); dit(); dit(); letterGap(); wordGap();
 }
 
+//TODO: can interruptFunction be a member function?
+//TODO: we need two values m_value for the two interrupts
+//TODO: write definition in declaration
+// a singleton button class
+class CToggleButton{
+private:
+	int m_interruptID;
+	bool m_value;
+
+	// no direct construction
+	CToggleButton();
+	// no direct construction with parameter
+	CToggleButton(int interruptID, bool initValue);
+	// no copy construction
+	CToggleButton(const CToggleButton &);
+
+	// interrupt function toggles value of button
+	void interruptFunction();
+public:
+	// get instance for button with interrupt-ID 0 (PIN 2)
+	static CToggleButton &instance0(bool initValue = false);
+	// get instance for button with interrupt-ID 1 (PIN 3)
+	static CToggleButton &instance1(bool initValue = false);
+};
+
+CToggleButton::CToggleButton(int interruptID, bool initValue) : m_interruptID(interruptID) , m_value(initValue)
+{
+	attachInterrupt(interruptID, (this->interruptFunction), FALLING);
+}
+
+CToggleButton &CToggleButton::instance0(bool initValue)
+{
+	static CToggleButton instance(0, initValue);
+	return instance;
+}
+
+CToggleButton &CToggleButton::instance1(bool initValue)
+{
+	static CToggleButton instance(0, initValue);
+	return instance;
+}
+
+void CToggleButton::interruptFunction()
+{
+	// toggle value
+	m_value = !m_value;
+}
+
 void interrupt_pin2()
 {
 	//FORTESTING:
