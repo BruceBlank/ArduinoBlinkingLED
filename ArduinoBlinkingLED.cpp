@@ -81,53 +81,62 @@ void CBlinkingLED::doit()
 	dit(); dit(); dit(); letterGap(); wordGap();
 }
 
-//TODO: can interruptFunction be a member function?
-//TODO: we need two values m_value for the two interrupts
-//TODO: write definition in declaration
 // a singleton button class
-class CToggleButton{
+class CToggleButtons{
 private:
-	int m_interruptID;
-	bool m_value;
+	static bool m_value0;
+	static bool m_value1;
 
 	// no direct construction
-	CToggleButton();
-	// no direct construction with parameter
-	CToggleButton(int interruptID, bool initValue);
+	CToggleButtons();
 	// no copy construction
-	CToggleButton(const CToggleButton &);
+	CToggleButtons(const CToggleButtons &);
+	// no direct construction with parameter
+	CToggleButtons(int interruptID, bool initValue)
+	{
+		if(interruptID == 0){
+			m_value0 = initValue;
+			attachInterrupt(0, CToggleButtons::interruptFunction0, FALLING);
+		}else{
+			m_value1 = initValue;
+			attachInterrupt(1, CToggleButtons::interruptFunction1, FALLING);
+		}
+	}
 
-	// interrupt function toggles value of button
-	void interruptFunction();
+	// interrupt function toggles value of button 0
+	static void interruptFunction0()
+	{
+		// toggle value
+		m_value0 = !m_value0;
+	}
+
+	// interrupt function toggles value of button 1
+	static void interruptFunction1()
+	{
+		// toggle value
+		m_value1 = !m_value1;
+	}
+
 public:
 	// get instance for button with interrupt-ID 0 (PIN 2)
-	static CToggleButton &instance0(bool initValue = false);
+	static CToggleButtons &instance0(bool initValue = false)
+	{
+		static CToggleButtons instance(0, initValue);
+		return instance;
+	}
+
 	// get instance for button with interrupt-ID 1 (PIN 3)
-	static CToggleButton &instance1(bool initValue = false);
+	static CToggleButtons &instance1(bool initValue = false)
+	{
+		static CToggleButtons instance(1, initValue);
+		return instance;
+	}
+
+	// get the value of button 0
+	static bool getValue0(bool v) {return m_value0;}
+	// get the value of button 0
+	static bool getValue1(bool v) {return m_value1;}
 };
-
-CToggleButton::CToggleButton(int interruptID, bool initValue) : m_interruptID(interruptID) , m_value(initValue)
-{
-	attachInterrupt(interruptID, (this->interruptFunction), FALLING);
-}
-
-CToggleButton &CToggleButton::instance0(bool initValue)
-{
-	static CToggleButton instance(0, initValue);
-	return instance;
-}
-
-CToggleButton &CToggleButton::instance1(bool initValue)
-{
-	static CToggleButton instance(0, initValue);
-	return instance;
-}
-
-void CToggleButton::interruptFunction()
-{
-	// toggle value
-	m_value = !m_value;
-}
 
 void interrupt_pin2()
 {
@@ -135,6 +144,7 @@ void interrupt_pin2()
 	digitalWrite(13, HIGH);
 }
 
+//TODO: test new toggle button class
 int main(void)
 {
 	// general initialization
