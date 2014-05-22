@@ -4,13 +4,12 @@
 class CBlinkingLED {
 public:
 	// the constructor
-	CBlinkingLED(uint8_t ledpin, uint8_t potpin, uint8_t buttonpin);
+	CBlinkingLED(uint8_t ledpin, uint8_t potpin);
 	// does the work once
 	void doit();
 private:
 	const uint8_t m_ledpin;
 	const uint8_t m_potpin;
-	const uint8_t m_buttonpin;
 	unsigned long m_timeScale;
 	CToggleButtons &m_toggleButton;
 
@@ -49,12 +48,11 @@ void CBlinkingLED::setLED(bool onoff)
 	}
 }
 
-CBlinkingLED::CBlinkingLED(uint8_t ledpin, uint8_t potpin, uint8_t buttonpin) :
-				m_ledpin(ledpin) , m_potpin(potpin), m_buttonpin(buttonpin) , m_timeScale(0),
+CBlinkingLED::CBlinkingLED(uint8_t ledpin, uint8_t potpin) :
+				m_ledpin(ledpin) , m_potpin(potpin), m_timeScale(0),
 				m_toggleButton(CToggleButtons::instance0())
 {
 	pinMode(m_ledpin, OUTPUT);
-	pinMode(m_buttonpin, INPUT);
 	// no pinMode for analog input necessary
 }
 
@@ -98,7 +96,8 @@ int main(void)
 	// general initialization
 	init();
 
-	CBlinkingLED blinkLED(13, A0, 8);
+	// create instance, LED-pin is 13, potentiometer-pin is A0
+	CBlinkingLED blinkLED(13, A0);
 
 	while (true)
 	{
