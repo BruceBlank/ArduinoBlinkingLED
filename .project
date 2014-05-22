@@ -27,6 +27,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>ArduinoUtilities</name>
+			<type>2</type>
+			<locationURI>ArduinoBlinkingLEDArduinoUtilities/ArduinoUtilities</locationURI>
+		</link>
+		<link>
 			<name>arduino/core</name>
 			<type>2</type>
 			<locationURI>ArduinoPlatformPath/cores/arduino</locationURI>

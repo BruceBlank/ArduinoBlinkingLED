@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "ToggleButtons.h"
+#include "ArduinoUtilities.h"
 
 class CBlinkingLED {
 public:
@@ -95,6 +96,10 @@ int main(void)
 {
 	// general initialization
 	init();
+
+	//FORTESTING:
+	Test t;
+	t.setValue(true);
 
 	// create instance, LED-pin is 13, potentiometer-pin is A0
 	CBlinkingLED blinkLED(13, A0);
